@@ -1190,11 +1190,34 @@
         }
         updateDateTime();
 
-        // 1. 보안 환경 적합 여부 체크
-        const isSecure = window.isSecureContext || window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        if (!isSecure || !navigator.bluetooth) {
+        // 1. 보안 환경 및 Web Bluetooth API 지원 체크
+        if (!navigator.bluetooth) {
             securityWarning.style.display = 'block';
-            writeLog("로컬 보안 정책에 따라 Web Bluetooth 기능이 제한될 수 있습니다. localhost 웹 서버 환경에서 구동해 주세요.", "err");
+            writeLog("현재 브라우저는 Web Bluetooth API를 지원하지 않습니다. 아래 모바일 안내 가이드를 참고하여 접속 브라우저를 변경해 주세요.", "err");
+            
+            // 모바일 사용자를 위한 전용 호환성 가이드 템플릿으로 오버레이 카드 교체
+            const overlayCard = document.querySelector('.overlay-card');
+            if (overlayCard) {
+                overlayCard.innerHTML = `
+                    <div class="overlay-icon-well" style="color: var(--color-danger); border-color: rgba(244, 63, 94, 0.2);">
+                        <span class="material-symbols-outlined">gpp_maybe</span>
+                    </div>
+                    <div class="overlay-text-group">
+                        <h3 class="overlay-title" style="font-size: 1.15rem;">블루투스 미지원 브라우저 📱</h3>
+                        <p class="overlay-desc" style="text-align: left; margin-top: 0.5rem; font-size: 0.78rem;">
+                            스마트폰 기본 브라우저는 보안 정책에 의해 웹 블루투스 기능이 차단되어 있을 수 있습니다. 아래 가이드를 참고해 주세요:
+                        </p>
+                        <div style="text-align: left; background: rgba(0,0,0,0.03); padding: 0.85rem; border-radius: 12px; margin-top: 0.75rem; font-size: 0.75rem; color: var(--text-muted); display: flex; flex-direction: column; gap: 0.55rem; border: var(--border-light); line-height: 1.5;">
+                            <strong>🍏 아이폰 (iOS) 사용자</strong>
+                            <span>App Store에서 <strong>Bluefy</strong> 브라우저 앱(무료)을 다운로드한 뒤, 해당 앱 내 주소창에 이 사이트 주소를 입력하여 접속해 주세요.</span>
+                            <hr style="opacity: 0.08;">
+                            <strong>🤖 안드로이드 (Android) 사용자</strong>
+                            <span><strong>Chrome</strong> 브라우저로 접속해 주시고, 폰 설정 ➡️ 애플리케이션 ➡️ Chrome ➡️ 권한 ➡️ '근처 기기' 또는 '위치' 권한이 허용되어 있는지 확인해 주세요.</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-secondary" style="width: 100%; border-radius: 12px; padding: 0.65rem;" onclick="location.reload()">페이지 새로고침</button>
+                `;
+            }
         }
 
         // 블루투스 연결을 시도하는 통합 공통 핸들러
