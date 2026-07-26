@@ -1236,16 +1236,22 @@
                 updateStatusUI('connecting', '스캔 검색 중...');
                 writeLog("Bluetooth 기기 검색을 시작합니다. (NUS 서비스 UUID 기반 스캔)", "sys");
 
-                // ★ 핵심: namePrefix 대신 NUS 서비스 UUID로 필터링
-                // MicroPython은 기기명을 Scan Response에 실어 보내기 때문에
-                // iOS(Bluefy)에서 namePrefix 필터가 동작하지 않습니다.
-                // 반면 서비스 UUID는 Advertising 패킷 본문에 실려있어
-                // 모든 플랫폼(iOS/Android)에서 안정적으로 동작합니다.
+                // NUS 서비스 UUID로 스캔 (iOS/Android 모두 호환 가능한 방식)
                 targetBleDevice = await navigator.bluetooth.requestDevice({
                     filters: [
                         { services: [NUS_SERVICE_UUID] }
                     ]
                 });
+
+                // ★ 선택된 기기명이 'ESP_'로 시작하는지 검증 (스캔 후 필터링)
+                if (targetBleDevice.name && !targetBleDevice.name.startsWith('ESP_')) {
+                    writeLog(`선택한 기기 "${targetBleDevice.name}"은 ESP_ 기기가 아닙니다. 연결을 취소합니다.`, "err");
+                    showToast(`⚠️ ESP_ 기기를 선택해 주세요. ("${targetBleDevice.name}" 선택됨)`);
+                    targetBleDevice = null;
+                    isConnecting = false;
+                    updateStatusUI('disconnected', '연결 대기');
+                    return;
+                }
 
                 writeLog(`디바이스 확인: ${targetBleDevice.name}. 페어링 및 연결 시도 중...`, "sys");
                 targetBleDevice.addEventListener('gattserverdisconnected', onDeviceDisconnected);
