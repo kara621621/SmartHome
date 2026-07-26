@@ -1236,10 +1236,12 @@
                 updateStatusUI('connecting', '스캔 검색 중...');
                 writeLog("Bluetooth 기기 검색을 시작합니다. 검색 대상 접두사: 'ESP_'", "sys");
 
-                // 기기 검색 조건 필터 적용 (이름 접두사가 'ESP_'로 시작하는 장치만 검색)
+                // 기기 검색 조건 필터 적용 (이름 접두사가 'ESP_', 'esp_', 'Esp_'로 시작하는 모든 기기 허용)
                 targetBleDevice = await navigator.bluetooth.requestDevice({
                     filters: [
-                        { namePrefix: 'ESP_' }
+                        { namePrefix: 'ESP_' },
+                        { namePrefix: 'esp_' },
+                        { namePrefix: 'Esp_' }
                     ],
                     optionalServices: [NUS_SERVICE_UUID]
                 });
