@@ -60,17 +60,23 @@
 ### 2.3. 무선 기기 스캔 방식 (Cross-Platform Compatible)
 
 > [!IMPORTANT]
-> **iOS(아이폰)** 환경에서는 `namePrefix` 방식이 작동하지 않습니다.
+> **iOS(아이폰)** 환경에서 `namePrefix`만 단독으로 사용하면 작동하지 않습니다.
 > MicroPython BLE는 기기명을 **Scan Response 패킷**에 담아 전송하는데, iOS Web Bluetooth(Bluefy)는 Scan Response를 읽지 못합니다.
-> **반드시 서비스 UUID 방식으로 스캔해야 합니다.**
+> 이를 해결하기 위해 **NUS 서비스 UUID + namePrefix를 하나의 필터 객체에 AND 조건으로 결합**합니다.
+> 서비스 UUID는 Advertising 패킷 본문에 실려있어 iOS에서도 기기를 탐지하고, namePrefix가 추가되어 `ESP_` 기기만 목록에 표시됩니다.
 
 ```javascript
-// ✅ iOS / Android 모두 호환되는 올바른 스캔 방식
+// ✅ iOS / Android / PC 모두 호환되는 현재 스캔 방식
+// 하나의 필터 객체 안에 두 조건 → AND 조건으로 동작
 navigator.bluetooth.requestDevice({
     filters: [
-        { services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'] }
+        {
+            services: ['6e400001-b5a3-f393-e0a9-e50e24dcca9e'], // NUS 서비스 UUID
+            namePrefix: 'ESP_'                                   // 기기명 접두사
+        }
     ]
 });
+// → NUS 서비스를 광고하면서 이름이 'ESP_'로 시작하는 기기만 검색 목록에 표시됩니다.
 ```
 
 ### 2.4. 모바일 기기별 지원 브라우저
