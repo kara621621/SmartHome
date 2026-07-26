@@ -55,9 +55,9 @@ humi_icon = bytearray([0x04, 0x04, 0x0A, 0x0A, 0x11, 0x1F, 0x1F, 0x0E])
 lcd.custom_char(0, temp_icon)
 lcd.custom_char(1, humi_icon)
 
-# BLE 인스턴스 초기화 및 'ryun' 장치명으로 페어링 시작
+# BLE 인스턴스 초기화 및 'ESP_ryun' 장치명으로 페어링 시작 (웹 검색 필터인 'ESP_' 매칭)
 ble = bluetooth.BLE()
-p = ble_library.BLESimplePeripheral(ble, "ryun")
+p = ble_library.BLESimplePeripheral(ble, "ESP_ryun")
 
 # OLED 디스플레이 초기화 (SDA Pin 21, SCL Pin 22)
 oled = SoftI2C(sda=Pin(21), scl=Pin(22))
