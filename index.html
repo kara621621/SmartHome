@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ESP32 스마트홈 Bluetooth NUS 컨트롤러 (소프트 네오모피즘 버전)</title>
-    <!-- 구글 폰트 적용: 인터페이스용 Plus Jakarta Sans, 코드 및 데이터를 위한 JetBrains Mono -->
+    <title>ESP32 스마트홈 Bluetooth NUS 컨트롤러 (앱 스타일 반응형)</title>
+    <!-- 구글 폰트 적용: 인터페이스용 Plus Jakarta Sans, 데이터용 JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -38,13 +38,14 @@
             
             --font-ui: 'Plus Jakarta Sans', sans-serif;
             --font-code: 'JetBrains Mono', monospace;
-            --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            -webkit-tap-highlight-color: transparent; /* 모바일 터치 하이라이트 투명화 */
         }
 
         body {
@@ -57,8 +58,8 @@
             overflow-x: hidden;
             line-height: 1.6;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.04) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 40%);
+                radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.03) 0%, transparent 45%),
+                radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 45%);
         }
 
         /* 보안 환경(HTTPS/Localhost) 경고 배너 */
@@ -67,19 +68,11 @@
             background: linear-gradient(90deg, #b91c1c 0%, #7f1d1d 100%);
             color: #fecaca;
             text-align: center;
-            padding: 0.75rem 1.5rem;
-            font-size: 0.85rem;
+            padding: 0.65rem 1.25rem;
+            font-size: 0.8rem;
             font-weight: 600;
-            border-bottom: 1px solid rgba(248, 113, 113, 0.3);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-            z-index: 1000;
+            z-index: 2000;
             position: relative;
-        }
-        
-        .security-warning-banner a {
-            color: white;
-            text-decoration: underline;
-            margin-left: 0.5rem;
         }
 
         /* 네비게이션 헤더 */
@@ -87,8 +80,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.25rem 2rem;
-            background: rgba(241, 245, 249, 0.85);
+            padding: 1rem 1.5rem;
+            background: rgba(241, 245, 249, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: var(--border-light);
@@ -100,20 +93,20 @@
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.5rem;
         }
 
         .logo-area h1 {
-            font-size: 1.15rem;
+            font-size: 1rem;
             font-weight: 800;
-            letter-spacing: -0.025em;
+            letter-spacing: -0.02em;
             color: var(--text-main);
         }
 
         .tech-badge {
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 800;
-            padding: 0.25rem 0.5rem;
+            padding: 0.2rem 0.45rem;
             border-radius: 9999px;
             background: rgba(37, 99, 235, 0.08);
             color: var(--color-primary);
@@ -124,40 +117,40 @@
         .nav-controls {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.75rem;
         }
 
         /* 블루투스 연결 상태 배지 */
         .status-badge {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            font-weight: 600;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            font-weight: 700;
             background: var(--bg-surface);
-            padding: 0.45rem 0.75rem;
-            border-radius: 12px;
+            padding: 0.4rem 0.65rem;
+            border-radius: 10px;
             border: var(--border-light);
             box-shadow: var(--shadow-raised);
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background-color: var(--color-danger);
-            box-shadow: 0 0 8px var(--color-danger);
+            box-shadow: 0 0 6px var(--color-danger);
             transition: var(--transition-smooth);
         }
 
         .status-dot.connected {
-            background-color: var(--color-success);
-            box-shadow: 0 0 12px var(--color-success);
+            background-color: var(--color-tertiary);
+            box-shadow: 0 0 10px var(--color-tertiary);
         }
 
         .status-dot.connecting {
-            background-color: var(--color-warning);
-            box-shadow: 0 0 12px var(--color-warning);
+            background-color: var(--color-secondary);
+            box-shadow: 0 0 10px var(--color-secondary);
             animation: blink 1s infinite alternate;
         }
 
@@ -170,15 +163,15 @@
         .btn {
             font-family: var(--font-ui);
             font-weight: 700;
-            font-size: 0.85rem;
-            padding: 0.55rem 1.1rem;
-            border-radius: 12px;
+            font-size: 0.8rem;
+            padding: 0.45rem 0.9rem;
+            border-radius: 10px;
             border: var(--border-light);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             transition: var(--transition-smooth);
             user-select: none;
         }
@@ -189,13 +182,7 @@
             box-shadow: var(--shadow-raised);
         }
 
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-button-hover);
-        }
-
         .btn-primary:active {
-            transform: translateY(0);
             box-shadow: var(--shadow-sunken);
         }
 
@@ -205,13 +192,7 @@
             box-shadow: var(--shadow-raised);
         }
 
-        .btn-danger:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-button-hover);
-        }
-
         .btn-danger:active {
-            transform: translateY(0);
             box-shadow: var(--shadow-sunken);
         }
 
@@ -221,26 +202,178 @@
             box-shadow: var(--shadow-raised);
         }
 
-        .btn-secondary:hover {
-            background: #f8fafc;
-            box-shadow: var(--shadow-button-hover);
-        }
-
         .btn-secondary:active {
             box-shadow: var(--shadow-sunken);
         }
 
-        /* 레이아웃 구조 */
+        /* 레이아웃 구조 (모바일 스크린 폭 제한으로 앱 스타일 제공) */
         main {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 1.5rem;
-            padding: 1.5rem;
-            max-width: 780px; /* 슬림한 모바일 스크린 비율 모사 */
+            gap: 1.25rem;
+            padding: 1.25rem;
+            max-width: 480px; /* 정석 모바일 스마트폰 비율 폭 */
             width: 100%;
             margin: 0 auto;
-            padding-bottom: 5rem;
+            padding-bottom: 5.5rem;
+            transition: filter 0.4s ease;
+        }
+
+        /* 기기 연결 전 블러 잠금 처리용 클래스 */
+        .dashboard-locked {
+            filter: blur(8px);
+            pointer-events: none;
+            user-select: none;
+        }
+
+        /* 앱 스타일 기기 연결 대기 대형 오버레이 */
+        .connection-overlay {
+            position: fixed;
+            top: 64px; /* 헤더 영역 아래부터 채움 */
+            left: 0;
+            right: 0;
+            bottom: 64px; /* 탭 바 영역 위까지 채움 */
+            background: rgba(241, 245, 249, 0.6);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .connection-overlay.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* 오버레이 대형 카드 */
+        .overlay-card {
+            background: var(--bg-card);
+            border: var(--border-light);
+            border-radius: 24px;
+            padding: 2.25rem 1.75rem;
+            width: 100%;
+            max-width: 360px;
+            box-shadow: var(--shadow-raised);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            transform: translateY(0);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .connection-overlay.hidden .overlay-card {
+            transform: translateY(30px);
+        }
+
+        .overlay-icon-well {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: var(--border-light);
+            box-shadow: var(--shadow-raised);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+        }
+
+        .overlay-icon-well span {
+            font-size: 2.25rem;
+        }
+
+        .overlay-text-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .overlay-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .overlay-desc {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* 펄스 애니메이션이 감싸진 대형 원형 연결 버튼 */
+        .pulse-button-wrapper {
+            position: relative;
+            margin: 0.75rem 0;
+        }
+
+        .big-connect-btn {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: var(--bg-card);
+            border: var(--border-light);
+            box-shadow: var(--shadow-raised);
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            gap: 4px;
+            transition: var(--transition-smooth);
+            z-index: 10;
+            position: relative;
+            user-select: none;
+        }
+
+        .big-connect-btn:hover {
+            box-shadow: var(--shadow-button-hover);
+        }
+
+        .big-connect-btn:active {
+            box-shadow: var(--shadow-sunken);
+            transform: scale(0.97);
+        }
+
+        .big-connect-btn span {
+            font-size: 1.75rem;
+        }
+
+        /* 페어링 유도 파동 펄스 링 */
+        .pulse-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 2px solid var(--color-primary-glow);
+            animation: pulse-wave 2s infinite ease-out;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes pulse-wave {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.45);
+                opacity: 0;
+            }
         }
 
         /* 네오모피즘 Raised 카드 플레이트 */
@@ -248,7 +381,7 @@
             background: var(--bg-card);
             border: var(--border-light);
             border-radius: 20px;
-            padding: 1.5rem;
+            padding: 1.25rem 1.5rem;
             display: flex;
             flex-direction: column;
             gap: 1.25rem;
@@ -256,30 +389,30 @@
             position: relative;
         }
 
-        /* 환영 세션 */
+        /* 환영 섹션 */
         .welcome-section {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 0.5rem 0.25rem;
+            padding: 0.25rem;
         }
 
         .welcome-title {
-            font-size: 1.35rem;
+            font-size: 1.2rem;
             font-weight: 800;
             color: var(--text-main);
         }
 
         .welcome-time {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--text-muted);
-            margin-top: 0.2rem;
+            margin-top: 0.15rem;
         }
 
-        /* 종 아이콘 알림 웰 */
+        /* 알림 벨 웰 */
         .noti-well {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background: var(--bg-card);
             border: var(--border-light);
@@ -298,8 +431,8 @@
 
         .noti-badge {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 9px;
+            right: 9px;
             width: 7px;
             height: 7px;
             background-color: var(--color-danger);
@@ -310,18 +443,18 @@
         .sensor-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 1.25rem;
+            gap: 1rem;
         }
 
         .sensor-card {
             background: var(--bg-card);
             border: var(--border-light);
             border-radius: 16px;
-            padding: 1.25rem;
+            padding: 1.1rem;
             box-shadow: var(--shadow-raised);
             display: flex;
             flex-direction: column;
-            gap: 0.75rem;
+            gap: 0.65rem;
             transition: var(--transition-smooth);
         }
 
@@ -330,14 +463,14 @@
             align-items: center;
             justify-content: space-between;
             color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 700;
+            font-size: 0.75rem;
+            font-weight: 800;
         }
 
         .sensor-icon-wrapper {
             display: flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.3rem;
         }
 
         .sensor-sync-btn {
@@ -354,73 +487,69 @@
             transition: var(--transition-smooth);
         }
 
-        .sensor-sync-btn:hover {
-            box-shadow: var(--shadow-button-hover);
-        }
-
         .sensor-sync-btn:active {
             box-shadow: var(--shadow-sunken);
         }
 
         .sensor-sync-btn span {
-            font-size: 14px;
+            font-size: 13px;
         }
 
         .sensor-value-group {
             display: flex;
             flex-direction: column;
-            gap: 0.4rem;
+            gap: 0.25rem;
         }
 
         .sensor-item {
             display: flex;
             align-items: baseline;
-            gap: 0.35rem;
+            gap: 0.25rem;
         }
 
         .sensor-num {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: 800;
             font-family: var(--font-code);
             color: var(--text-main);
         }
 
         .sensor-label {
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.72rem;
+            font-weight: 700;
             color: var(--text-dimmed);
         }
 
         .sensor-status-badge {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             font-weight: 700;
             color: var(--color-tertiary);
-            margin-top: 0.2rem;
+            margin-top: 0.15rem;
         }
 
         /* 패널 타이틀 정의 */
         .panel-heading {
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 800;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             color: var(--text-main);
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 0.75rem;
-            margin-bottom: 0.25rem;
+            padding-bottom: 0.65rem;
+            margin-bottom: 0.15rem;
         }
 
         /* 컨트롤 카드 그룹 */
         .control-group {
             display: flex;
             flex-direction: column;
-            gap: 0.85rem;
-            background: rgba(255, 255, 255, 0.3);
+            gap: 0.75rem;
+            background: rgba(255, 255, 255, 0.35);
             border: var(--border-light);
             border-radius: 16px;
-            padding: 1.25rem;
-            box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.8);
+            padding: 1.1rem;
+            box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.8);
         }
 
         .group-header {
@@ -430,7 +559,7 @@
         }
 
         .group-title {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 800;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -440,8 +569,8 @@
         /* 제어 그리드 버튼 배치 */
         .btn-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-            gap: 0.85rem;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
         }
 
         /* 스마트홈 제어 네오모픽 Raised 버튼 */
@@ -450,9 +579,9 @@
             border: var(--border-light);
             border-radius: 14px;
             color: var(--text-main);
-            padding: 1.15rem 0.6rem;
-            font-size: 0.88rem;
-            font-weight: 750;
+            padding: 1rem 0.5rem;
+            font-size: 0.82rem;
+            font-weight: 800;
             cursor: pointer;
             box-shadow: var(--shadow-raised);
             transition: var(--transition-smooth);
@@ -460,38 +589,17 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
             user-select: none;
-        }
-
-        .hardware-btn:hover {
-            box-shadow: var(--shadow-button-hover);
-            transform: translateY(-1.5px);
         }
 
         .hardware-btn:active {
             box-shadow: var(--shadow-sunken);
-            transform: translateY(0);
+            transform: scale(0.97);
         }
 
         .hardware-btn span.material-symbols-outlined {
-            font-size: 1.5rem;
-            transition: transform 0.2s ease;
-        }
-
-        .hardware-btn:active span.material-symbols-outlined {
-            transform: scale(0.95);
-        }
-
-        /* 버튼 송신 문자 힌트 텍스트 */
-        .btn-hint {
-            font-size: 0.62rem;
-            color: var(--text-dimmed);
-            font-family: var(--font-code);
-            background: #e2e8f0;
-            padding: 0.1rem 0.4rem;
-            border-radius: 4px;
-            margin-top: 0.15rem;
+            font-size: 1.35rem;
         }
 
         /* Neumorphic 슬라이딩 토글 스위치 웰 */
@@ -499,18 +607,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.25rem 0.5rem;
+            padding: 0.15rem 0.35rem;
         }
 
         .toggle-mood-text-group {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 0.65rem;
         }
 
         .toggle-icon-well {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: rgba(37, 99, 235, 0.08);
             border: var(--border-light);
@@ -520,41 +628,45 @@
             color: var(--color-primary);
         }
 
+        .toggle-icon-well span {
+            font-size: 1.2rem;
+        }
+
         .toggle-mood-label {
-            font-size: 0.92rem;
-            font-weight: 700;
+            font-size: 0.85rem;
+            font-weight: 800;
             color: var(--text-main);
         }
 
         .toggle-mood-desc {
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--text-dimmed);
         }
 
         .neomorphic-switch {
-            width: 56px;
-            height: 32px;
+            width: 52px;
+            height: 28px;
             border-radius: 9999px;
             background: #e2e8f0;
             border: var(--border-light);
-            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.08);
+            box-shadow: inset 1px 1px 3px rgba(0, 0, 0, 0.08);
             position: relative;
             cursor: pointer;
             transition: var(--transition-smooth);
-            padding: 3px;
+            padding: 2px;
         }
 
         .neomorphic-switch.active {
             background: var(--color-primary-glow);
-            border-color: rgba(37, 99, 235, 0.25);
+            border-color: rgba(37, 99, 235, 0.2);
         }
 
         .neomorphic-switch-dot {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: var(--bg-surface);
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.15);
+            box-shadow: 1px 1px 3px rgba(0,0,0,0.15);
             transition: var(--transition-smooth);
             transform: translateX(0);
         }
@@ -562,19 +674,18 @@
         .neomorphic-switch.active .neomorphic-switch-dot {
             transform: translateX(24px);
             background: var(--color-primary);
-            box-shadow: 0 0 8px var(--color-primary-glow);
         }
 
         /* OLED 스누피 배너 */
         .oled-banner {
             border-radius: 20px;
-            padding: 1.5rem;
+            padding: 1.25rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
             overflow: hidden;
             position: relative;
-            min-height: 160px;
+            min-height: 140px;
             box-shadow: var(--shadow-raised);
             background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCf1B9ry47bOiQHERbYjLg5O6tUCSkwMheoiv4BuG0VFCCzLlAszSiwhiXvzihPQV9Tp2OJI7mUgrCg9Zt8bVmCk3UZo-oV6kiCGUcWKUrzQ9_c0lzUiuRvBPe5yJj9EKRT6dBxLGU3gU8JGsXDYOSxkBzUPd9_4uO2bC2XrgdnprTbN7pN4Z5TADxtI8e3W8XeXpyFtqy22fxohm3fpN5YultoajlG7WkgjweEBUxvcHlKTbuqzbAUg6nEPG5fk94p7hePFiSbWQ');
             background-size: cover;
@@ -594,27 +705,27 @@
             color: white;
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
+            gap: 0.25rem;
             align-items: flex-start;
         }
 
         .oled-title {
-            font-size: 1.15rem;
+            font-size: 1rem;
             font-weight: 800;
         }
 
         .oled-desc {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: rgba(255, 255, 255, 0.8);
         }
 
         .oled-send-btn {
-            margin-top: 0.75rem;
-            padding: 0.5rem 1.25rem;
+            margin-top: 0.5rem;
+            padding: 0.45rem 1.1rem;
             background: var(--color-primary);
             color: white;
             border-radius: 9999px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             border: none;
             cursor: pointer;
@@ -622,16 +733,11 @@
             transition: var(--transition-smooth);
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-        }
-
-        .oled-send-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 14px var(--color-primary-glow);
+            gap: 0.3rem;
         }
 
         .oled-send-btn:active {
-            transform: scale(0.98);
+            transform: scale(0.96);
         }
 
         /* 하단 음각 터미널 로그 콘솔 */
@@ -639,13 +745,13 @@
             background: var(--bg-card);
             border: var(--border-light);
             border-radius: 20px;
-            padding: 1.25rem;
+            padding: 1.1rem;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.4rem;
             overflow: hidden;
             box-shadow: var(--shadow-sunken); /* 음각 효과 */
-            height: 250px;
+            height: 220px;
         }
 
         .terminal-header {
@@ -653,34 +759,34 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-            padding-bottom: 0.4rem;
+            padding-bottom: 0.35rem;
         }
 
         .terminal-title {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 800;
             color: var(--text-muted);
             display: flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.35rem;
         }
 
         .terminal-log-container {
             flex: 1;
             overflow-y: auto;
             font-family: var(--font-code);
-            font-size: 0.75rem;
-            line-height: 1.5;
+            font-size: 0.7rem;
+            line-height: 1.45;
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
-            padding-right: 0.5rem;
+            gap: 0.3rem;
+            padding-right: 0.4rem;
         }
 
         /* 로그 세부 라인 */
         .log-row {
             display: flex;
-            gap: 0.75rem;
+            gap: 0.5rem;
             word-break: break-all;
         }
 
@@ -693,7 +799,7 @@
         .log-tag {
             font-weight: 700;
             flex-shrink: 0;
-            width: 32px;
+            width: 30px;
             user-select: none;
         }
 
@@ -716,26 +822,27 @@
         /* 토스트 팝업 메시지 */
         .toast-popup {
             position: fixed;
-            bottom: 5rem;
-            left: 51.3%;
+            bottom: 5.25rem;
+            left: 50%;
             transform: translateX(-50%);
-            padding: 0.6rem 1.4rem;
+            padding: 0.55rem 1.25rem;
             background: rgba(25, 28, 30, 0.9);
             color: white;
             border-radius: 9999px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             opacity: 0;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             pointer-events: none;
             z-index: 1000;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             backdrop-filter: blur(8px);
+            white-space: nowrap;
         }
 
         .toast-popup.visible {
             opacity: 1;
-            bottom: 5.5rem;
+            bottom: 5.75rem;
         }
 
         /* 하단 모바일 바 형태 탭 메뉴 */
@@ -744,7 +851,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 64px;
+            height: 60px;
             background: rgba(247, 249, 251, 0.9);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
@@ -753,6 +860,7 @@
             justify-content: space-around;
             align-items: center;
             z-index: 100;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
         }
 
         .tab-btn {
@@ -765,7 +873,7 @@
             color: var(--text-dimmed);
             cursor: pointer;
             transition: var(--transition-smooth);
-            min-width: 64px;
+            min-width: 60px;
             gap: 2px;
         }
 
@@ -774,28 +882,25 @@
         }
 
         .tab-btn span.material-symbols-outlined {
-            font-size: 22px;
+            font-size: 20px;
         }
 
         .tab-label {
-            font-size: 0.72rem;
+            font-size: 0.65rem;
             font-weight: 700;
         }
 
         /* 스크롤바 디자인 */
         ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 4px;
+            height: 4px;
         }
         ::-webkit-scrollbar-track {
             background: transparent;
         }
         ::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.08);
+            background: rgba(0, 0, 0, 0.06);
             border-radius: 9999px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(0, 0, 0, 0.16);
         }
     </style>
 </head>
@@ -824,10 +929,32 @@
         </div>
     </header>
 
-    <!-- 대시보드 메인 -->
-    <main>
+    <!-- 대형 기기 연결 대기 오버레이 패널 -->
+    <section id="connectionOverlay" class="connection-overlay">
+        <div class="overlay-card">
+            <div class="overlay-icon-well">
+                <span class="material-symbols-outlined">bluetooth_searching</span>
+            </div>
+            <div class="overlay-text-group">
+                <h3 class="overlay-title">스마트홈 기기 연결 필요 🔌</h3>
+                <p class="overlay-desc">대시보드를 작동하려면 아래 기기 스캔 버튼을 눌러 ESP32 스마트홈을 블루투스로 연동해 주세요.</p>
+            </div>
+            
+            <!-- 큰 원형 연동 펄스 버튼 -->
+            <div class="pulse-button-wrapper">
+                <button id="bigBleConnectBtn" class="big-connect-btn">
+                    <span class="material-symbols-outlined">sensors</span>
+                    기기 검색
+                </button>
+                <div class="pulse-ring"></div>
+            </div>
+        </div>
+    </section>
 
-        <!-- 환영 색션 및 일시 정보 -->
+    <!-- 대시보드 메인 (기기 연결 전에는 블러 잠금 처리) -->
+    <main id="dashboardMain" class="dashboard-locked">
+
+        <!-- 환영 섹션 및 일시 정보 -->
         <section class="welcome-section">
             <div>
                 <h2 class="welcome-title">안녕하세요, 사용자님! 👋</h2>
@@ -839,7 +966,7 @@
             </div>
         </section>
 
-        <!-- 실시간 센서 모니터 그리드 (smartHome.py 71~108번 줄 연동) -->
+        <!-- 실시간 센서 모니터 그리드 -->
         <section class="sensor-grid">
             <!-- 온습도 센서 모니터 -->
             <div class="sensor-card">
@@ -968,7 +1095,7 @@
                     <h3 class="oled-title">OLED 전광판 배너</h3>
                     <p class="oled-desc">스누피(Snoopy) 비트맵 그래픽을 OLED 디스플레이에 출력합니다.</p>
                     <button id="oledPrintBtn" class="oled-send-btn" onclick="triggerOledPrint(event)">
-                        <span class="material-symbols-outlined text-[16px]">send</span>
+                        <span class="material-symbols-outlined text-[15px]">send</span>
                         메시지 전송
                     </button>
                 </div>
@@ -982,7 +1109,7 @@
                 <div class="terminal-title">
                     <span>📟</span> 통신 콘솔 로그 모니터 (실시간 TX/RX)
                 </div>
-                <button class="btn btn-secondary" style="padding: 0.35rem 0.65rem; font-size: 0.75rem; border-radius: 8px;" onclick="clearTerminalLogs()">로그 비우기</button>
+                <button class="btn btn-secondary" style="padding: 0.3rem 0.55rem; font-size: 0.7rem; border-radius: 8px;" onclick="clearTerminalLogs()">로그 비우기</button>
             </div>
             <div id="terminalLogs" class="terminal-log-container">
                 <!-- 동적 로그 기록 -->
@@ -1043,6 +1170,9 @@
 
         // DOM 객체 캐싱
         const bleConnectBtn = document.getElementById('bleConnectBtn');
+        const bigBleConnectBtn = document.getElementById('bigBleConnectBtn');
+        const connectionOverlay = document.getElementById('connectionOverlay');
+        const dashboardMain = document.getElementById('dashboardMain');
         const statusDot = document.getElementById('statusDot');
         const statusText = document.getElementById('statusText');
         const terminalLogs = document.getElementById('terminalLogs');
@@ -1067,8 +1197,8 @@
             writeLog("로컬 보안 정책에 따라 Web Bluetooth 기능이 제한될 수 있습니다. localhost 웹 서버 환경에서 구동해 주세요.", "err");
         }
 
-        // 블루투스 연결 토글 이벤트 핸들러
-        bleConnectBtn.addEventListener('click', async () => {
+        // 블루투스 연결을 시도하는 통합 공통 핸들러
+        async function attemptBleConnection() {
             if (isConnecting) return;
 
             // 이미 연결되어 있다면 해제 처리
@@ -1110,7 +1240,11 @@
                 await txChar.startNotifications();
                 txChar.addEventListener('characteristicvaluechanged', onDataReceivedFromDevice);
 
+                // 🌟 연결 성공 시: UI 잠금 오버레이 해제 및 잠금 해제 🌟
                 updateStatusUI('connected', `연결됨`);
+                connectionOverlay.classList.add('hidden');
+                dashboardMain.classList.remove('dashboard-locked');
+
                 writeLog(`블루투스 페어링 성공: ${targetBleDevice.name}`, "sys");
                 showToast("블루투스가 성공적으로 연결되었습니다.");
                 
@@ -1123,13 +1257,21 @@
             } finally {
                 isConnecting = false;
             }
-        });
+        }
+
+        // 헤더 버튼 및 대형 연결 촉구 버튼 둘 다 연동
+        bleConnectBtn.addEventListener('click', attemptBleConnection);
+        bigBleConnectBtn.addEventListener('click', attemptBleConnection);
 
         // 기기 연결 해제 콜백 함수
         function onDeviceDisconnected() {
             updateStatusUI('disconnected', '연결 끊김');
             writeLog("기기 블루투스 연결이 해제되었습니다.", "sys");
             
+            // 🌟 연결 종료 시: UI 잠금 오버레이 다시 노출 및 대시보드 잠금 🌟
+            connectionOverlay.classList.remove('hidden');
+            dashboardMain.classList.add('dashboard-locked');
+
             targetBleDevice = null;
             rxChar = null;
             txChar = null;
@@ -1149,7 +1291,7 @@
             }
         }
 
-        // ESP32 기기로부터 피드백(Notify) 데이터 수신 시 처리 함수 (센서 데이터 파싱 및 실시간 위젯 연동 포함)
+        // ESP32 기기로부터 피드백(Notify) 데이터 수신 시 처리 함수
         function onDataReceivedFromDevice(event) {
             const val = event.target.value;
             const decoder = new TextDecoder();
@@ -1169,7 +1311,6 @@
                     writeLog(completedMessage, 'rx');
                     
                     // 수신 텍스트 기반 실시간 대시보드 위젯 동적 연동 구현!
-                    // 1. 온습도 동기화 패칭 (예: "temp : 24C" 또는 "humi : 45%")
                     if (completedMessage.toLowerCase().includes('temp')) {
                         const tempMatch = completedMessage.match(/\d+/);
                         if (tempMatch) {
@@ -1184,7 +1325,6 @@
                             showToast(`습도 동기화 완료: ${humiMatch[0]}%`);
                         }
                     }
-                    // 2. 조도 밝기 수치 동기화 패칭 (예: cds.read() 의 아날로그 원시 전압값 숫자 전달 시)
                     if (/^\d+$/.test(completedMessage)) {
                         const luxVal = parseInt(completedMessage, 10);
                         document.getElementById('sensorLux').textContent = `${luxVal} Lux`;
@@ -1226,7 +1366,6 @@
                 for (let i = 0; i < dataBytes.length; i += packetLimit) {
                     const block = dataBytes.slice(i, i + packetLimit);
                     await rxChar.writeValueWithoutResponse(block);
-                    // ESP32 수신 처리를 돕기 위한 20ms 간격 딜레이 부여
                     await new Promise(resolve => setTimeout(resolve, 20));
                 }
                 writeLog("데이터 전송 성공.", "sys");
@@ -1252,13 +1391,11 @@
         // 백라이트 토글 버튼 동작 핸들러
         backlightToggle.addEventListener('click', () => {
             if (backlightState) {
-                // 현재 켜져있음 -> 끄기 (명령어 '4')
                 backlightToggle.classList.remove('active');
                 backlightState = false;
                 showToast("백라이트 무드등이 꺼졌습니다.");
                 triggerSend('tv_backlight_off');
             } else {
-                // 현재 꺼져있음 -> 켜기
                 backlightToggle.classList.add('active');
                 backlightState = true;
                 showToast("백라이트 무드등이 켜졌습니다.");
@@ -1271,13 +1408,12 @@
             event.preventDefault();
             
             const originalText = oledPrintBtn.innerHTML;
-            oledPrintBtn.innerHTML = '<span class="material-symbols-outlined text-[16px] animate-spin">refresh</span> 전송 중...';
+            oledPrintBtn.innerHTML = '<span class="material-symbols-outlined text-[15px] animate-spin">refresh</span> 전송 중...';
             oledPrintBtn.disabled = true;
 
             showToast("스누피 그림을 출력하는 중입니다... 🐶");
             triggerSend('oled_snoopy');
 
-            // 3초간 쿨다운 지연 후 원래 상태 복구
             setTimeout(() => {
                 oledPrintBtn.innerHTML = originalText;
                 oledPrintBtn.disabled = false;
